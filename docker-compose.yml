@@ -1,0 +1,56 @@
+version: '3.7'
+services:
+
+  #PHP Service
+  laravel:
+    build:
+      context: ./laravel
+      dockerfile: Dockerfile
+    image: digitalocean.com/php
+    container_name: laravel
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: laravel
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    networks:
+      - laravel-network
+    volumes:
+       - ./laravel:/var/www
+       - ./laravel/local.ini:/usr/local/etc/php/conf.d/local.ini
+
+  #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - laravel-network
+
+  #MySQL Service
+  db:
+    image: mysql:5.7.22
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: your_mysql_root_password
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./mysql/dbdata:/var/lib/mysql
+    networks:
+      - laravel-network
+
+#Docker Networks
+networks:
+  laravel-network:
+    driver: bridge
