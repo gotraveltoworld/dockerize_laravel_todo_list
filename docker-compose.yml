@@ -6,18 +6,19 @@ services:
     build:
       context: ./laravel
       dockerfile: Dockerfile
-    image: digitalocean.com/php
     container_name: laravel
     restart: unless-stopped
     tty: true
     environment:
       SERVICE_NAME: laravel
       SERVICE_TAGS: dev
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PWD}
     working_dir: /var/www
     networks:
       - laravel-network
     volumes:
-       - ./laravel:/var/www
+       - ./laravel/app:/var/www
        - ./laravel/local.ini:/usr/local/etc/php/conf.d/local.ini
 
   #Nginx Service
@@ -27,8 +28,12 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "80:80"
-      - "443:443"
+      - "8000:80"
+      - "44300:443"
+    volumes:
+      - ./laravel/app:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./nginx/logs/:/var/log/nginx/
     networks:
       - laravel-network
 
@@ -41,8 +46,8 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: your_mysql_root_password
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PWD}
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
