@@ -18,7 +18,7 @@ services:
     networks:
       - laravel-network
     volumes:
-       - ./laravel/app:/var/www
+       - ./laravel/application:/var/www
        - ./laravel/local.ini:/usr/local/etc/php/conf.d/local.ini
 
   #Nginx Service
@@ -31,7 +31,7 @@ services:
       - "8000:80"
       - "44300:443"
     volumes:
-      - ./laravel/app:/var/www
+      - ./laravel/application:/var/www
       - ./nginx/conf.d/:/etc/nginx/conf.d/
       - ./nginx/logs/:/var/log/nginx/
     networks:
