@@ -1,0 +1,7 @@
+2019/03/19 17:50:30 [emerg] 1#1: host not found in upstream "app" in /etc/nginx/conf.d/app.conf:10
+2019/03/19 17:50:34 [emerg] 1#1: host not found in upstream "app" in /etc/nginx/conf.d/app.conf:10
+2019/03/19 17:50:36 [emerg] 1#1: host not found in upstream "app" in /etc/nginx/conf.d/app.conf:10
+2019/03/19 17:50:39 [emerg] 1#1: host not found in upstream "app" in /etc/nginx/conf.d/app.conf:10
+2019/03/19 17:50:42 [emerg] 1#1: host not found in upstream "app" in /etc/nginx/conf.d/app.conf:10
+2019/03/19 17:50:45 [emerg] 1#1: host not found in upstream "app" in /etc/nginx/conf.d/app.conf:10
+2019/03/19 17:50:49 [emerg] 1#1: host not found in upstream "app" in /etc/nginx/conf.d/app.conf:10
