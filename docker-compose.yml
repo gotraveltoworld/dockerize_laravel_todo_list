@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3'
 services:
 
   #PHP Service
@@ -12,8 +12,8 @@ services:
     environment:
       SERVICE_NAME: laravel
       SERVICE_TAGS: dev
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_ROOT_PASSWORD: ${DB_PWD}
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: your_mysql_root_password
     working_dir: /var/www
     networks:
       - laravel-network
@@ -46,8 +46,8 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_ROOT_PASSWORD: ${DB_PWD}
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: your_mysql_root_password
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
