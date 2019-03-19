@@ -1,0 +1,15 @@
+.env
+mysql/dbdata
+*.log
+
+laravel/app/node_modules
+laravel/app/public/hot
+laravel/app/public/storage
+laravel/app/storage/*.key
+laravel/app/vendor
+.env
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
