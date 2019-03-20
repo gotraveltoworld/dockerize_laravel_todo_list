@@ -12,9 +12,48 @@
 */
 
 use App\Task;
+use App\ToDoList;
 use Illuminate\Http\Request;
 
 Route::group(['middleware' => ['web']], function () {
+
+    /**
+     * Show Task Dashboard
+     */
+    Route::get('/todolist', function () {
+        return view('todolist', [
+            'tasks' => ToDoList::getTasks()
+        ]);
+    });
+    /**
+     * Add New Task
+     */
+    Route::post('/addToDoList', function (Request $request) {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:50',
+            'content' => 'required|max:300',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/')
+                ->withInput()
+                ->withErrors($validator);
+        }
+
+        $ext = $request->attachment->getClientOriginalExtension();
+        $fileName = 'attachment_'. uniqid(). '.'. $ext;
+        $path = $request->file('attachment')->storeAs(
+            'public/attachments',
+            $fileName
+        );
+        var_dump($path);
+        // $todolist = new ToDoList;
+        // $task->addToDoList();
+
+        return redirect('/todolist');
+    });
+
+
     /**
      * Show Task Dashboard
      */
