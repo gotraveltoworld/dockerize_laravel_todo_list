@@ -15,8 +15,28 @@ use App\Task;
 use App\ToDoList;
 use Illuminate\Http\Request;
 
-Route::group(['middleware' => ['web']], function () {
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Facades\JWTFactory;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
+Route::group(['prefix' => 'auth'], function () {
+    Route::get('/token', function () {
+        $time = time();
+        $customClaims = [
+            'iss' => 'demo',
+            'sub' => '1',
+            'iat' => $time,
+            'exp' => ($time + 6000),
+            'nbf' => $time,
+            'jti' => uniqid(). rand()
+        ];
+        $payload = JWTFactory::make($customClaims);
+        $token = JWTAuth::encode($payload);
+        return response()->json(['token' => (string) $token]);
+    });
+});
+
+Route::group(['middleware' => ['web']], function () {
     /**
      * Show Task Dashboard
      */
@@ -26,19 +46,30 @@ Route::group(['middleware' => ['web']], function () {
         ]);
     });
 
+
+    /**
+     * Get
+     */
     Route::get('/todolist/{id?}', function ($id = null) {
         return response()->json((new ToDoList)->getData($id));
     });
 
+    /**
+     * Delete
+     */
     Route::delete('/deleteList/{id?}', function ($id = null) {
         return response()->json((new ToDoList)->deletedList($id));
     });
+
+
 
     Route::delete('/deleteRedirect/{id?}', function ($id = null) {
         $result = (new ToDoList)->deletedList($id);
         return redirect('/');
     });
-
+    /**
+     * Update
+     */
     Route::put('/updateRedirect/{id}', function (Request $request, $id = null) {
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:50',
