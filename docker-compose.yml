@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
 
   #PHP Service
@@ -6,14 +6,17 @@ services:
     build:
       context: ./laravel
       dockerfile: Dockerfile
+      args:
+        - DB_HOST=db
+        - MYSQL_DATABASE=${DB_NAME}
+        - MYSQL_DBUSER=${MYSQL_DBUSER}
+        - MYSQL_ROOT_PASSWORD=${DB_PWD}
     container_name: laravel
     restart: unless-stopped
     tty: true
     environment:
-      SERVICE_NAME: laravel
-      SERVICE_TAGS: dev
-      MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: your_mysql_root_password
+      - SERVICE_NAME=laravel
+      - SERVICE_TAGS=dev
     working_dir: /var/www
     networks:
       - laravel-network
@@ -46,10 +49,10 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: your_mysql_root_password
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PWD}
+      - SERVICE_TAGS=dev
+      - SERVICE_NAME=mysql
     volumes:
       - ./mysql/dbdata:/var/lib/mysql
     networks:

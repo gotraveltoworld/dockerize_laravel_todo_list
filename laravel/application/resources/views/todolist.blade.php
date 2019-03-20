@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="col-sm-offset-2 col-sm-8">
-            <div class="panel panel-default">
+            <div class="panel panel-success">
                 <div class="panel-heading">
                     New Task
                 </div>
@@ -59,7 +59,7 @@
                         <!-- Add Task Button -->
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-6">
-                                <button type="submit" class="btn btn-default">
+                                <button type="submit" class="btn btn-success">
                                     <i class="fa fa-btn fa-plus"></i>
                                         Add Task
                                 </button>
@@ -71,7 +71,7 @@
 
             <!-- Current Tasks -->
             @if (count($tasks) > 0)
-                <div class="panel panel-default">
+                <div class="panel panel-danger">
                     <div class="panel-heading">
                         Current Tasks
                     </div>
@@ -98,21 +98,24 @@
                                             </div>
                                         </td>
                                         <td class="table-text">
-                                        attachment:
+                                        attachment name:
                                             <div>
-                                                {{ $task->attachment }}
+                                            <a href='{{ asset("storage/". $task->attachment) }}'
+                                                download="{{ $task->attachment_ori_name }}"
+                                                target="_blank">
+                                                {{ $task->attachment_ori_name }}
+                                            </a>
                                             </div>
                                         </td>
 
                                         <!-- Task Delete Button -->
                                         <td>
                                             <form
-                                                action="{{ url('todolist/'.$task->id) }}"
+                                                action="{{ url('deleteRedirect/'.$task->id) }}"
                                                 method="POST"
                                             >
                                                 {{ csrf_field() }}
                                                 {{ method_field('DELETE') }}
-
                                                 <button type="submit" class="btn btn-danger">
                                                     <i class="fa fa-btn fa-trash"></i>
                                                     Delete
@@ -123,6 +126,56 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Edit
+                    </div>
+                    <div class="panel-body">
+                        @foreach ($tasks as $task)
+                        <form
+                            class="form-horizontal"
+                            action="{{ url('updateRedirect/'.$task->id) }}"
+                            method="POST"
+                            enctype="multipart/form-data"
+                        >
+                            {{ csrf_field() }}
+                            {{ method_field('PUT') }}
+                            <div class="form-group">
+                                <label for="task-name" class="col-sm-3 control-label">
+                                    Title
+                                </label>
+
+                                <div class="col-sm-6">
+                                    <input type="text" name="title"
+                                        id="task-title"
+                                        class="form-control"
+                                        value="{{ $task->title }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="task-name" class="col-sm-3 control-label">
+                                    Content
+                                </label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="content"
+                                        id="task-content"
+                                        class="form-control"
+                                        value="{{ $task->content }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-3 col-sm-6">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-btn"></i>
+                                        UPDATE
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        @endforeach
                     </div>
                 </div>
             @endif

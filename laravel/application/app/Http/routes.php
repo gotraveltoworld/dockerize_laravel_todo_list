@@ -20,10 +20,44 @@ Route::group(['middleware' => ['web']], function () {
     /**
      * Show Task Dashboard
      */
-    Route::get('/todolist', function () {
+    Route::get('/', function () {
         return view('todolist', [
-            'tasks' => ToDoList::getTasks()
+            'tasks' => (new ToDoList)->getData()
         ]);
+    });
+
+    Route::get('/todolist/{id?}', function ($id = null) {
+        return response()->json((new ToDoList)->getData($id));
+    });
+
+    Route::delete('/deleteList/{id?}', function ($id = null) {
+        return response()->json((new ToDoList)->deletedList($id));
+    });
+
+    Route::delete('/deleteRedirect/{id?}', function ($id = null) {
+        $result = (new ToDoList)->deletedList($id);
+        return redirect('/');
+    });
+
+    Route::put('/updateRedirect/{id}', function (Request $request, $id = null) {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:50',
+            'content' => 'required|max:300'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/')
+                ->withInput()
+                ->withErrors($validator);
+        }
+        $todolist = new ToDoList;
+        $todolist->updatedList(
+            $id,
+            $request->title,
+            $request->content
+        );
+
+        return redirect('/');
     });
     /**
      * Add New Task
@@ -32,6 +66,10 @@ Route::group(['middleware' => ['web']], function () {
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:50',
             'content' => 'required|max:300',
+            'attachment' => [
+                'file',
+                'max : 10240' // 10 MB
+            ]
         ]);
 
         if ($validator->fails()) {
@@ -40,56 +78,20 @@ Route::group(['middleware' => ['web']], function () {
                 ->withErrors($validator);
         }
 
+        $oriName = $request->attachment->getClientOriginalName();
         $ext = $request->attachment->getClientOriginalExtension();
         $fileName = 'attachment_'. uniqid(). '.'. $ext;
         $path = $request->file('attachment')->storeAs(
             'public/attachments',
             $fileName
         );
-        var_dump($path);
-        // $todolist = new ToDoList;
-        // $task->addToDoList();
-
-        return redirect('/todolist');
-    });
-
-
-    /**
-     * Show Task Dashboard
-     */
-    Route::get('/', function () {
-        return view('tasks', [
-            'tasks' => Task::orderBy('created_at', 'asc')->get()
-        ]);
-    });
-
-    /**
-     * Add New Task
-     */
-    Route::post('/task', function (Request $request) {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect('/')
-                ->withInput()
-                ->withErrors($validator);
-        }
-
-        $task = new Task;
-        $task->name = $request->name;
-        $task->save();
-
-        return redirect('/');
-    });
-
-    /**
-     * Delete Task
-     */
-    Route::delete('/task/{id}', function ($id) {
-        Task::findOrFail($id)->delete();
-
+        $todolist = new ToDoList;
+        $id = $todolist->addToDoList(
+            $request->title,
+            $request->content,
+            $fileName,
+            $oriName
+        );
         return redirect('/');
     });
 });
