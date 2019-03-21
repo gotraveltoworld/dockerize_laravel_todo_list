@@ -13,6 +13,9 @@ Steps：
 6. `docker-compose exec laravel php artisan db:seed --class=UsersTableSeeder`
 7. Open browser to show on `http://localhost:8000`
 
+Web View:
+http://localhost:8000
+
 APIs:
 * get all to-do lists : http://localhost:8000/todolist
 * get one to-do list : http://localhost:8000/todolist/{id}
