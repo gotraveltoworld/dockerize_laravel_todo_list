@@ -3,6 +3,13 @@ To build a simple application of that todo list.
 
 本專案為個人練習，主要建置以Laravel, Nginx, Mysql為基礎的應用程式。
 
+You need to build '.env' file(Note: mysql's user is root)
+```
+DB_NAME=laravel
+MYSQL_DBUSER=root
+DB_PWD=your_mysql_root_password
+```
+
 建置順序：
 Steps：
 1. `docker-compose build`
