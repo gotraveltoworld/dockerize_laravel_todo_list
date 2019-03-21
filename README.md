@@ -24,4 +24,3 @@ APIs:
 * delete one to-do list : http://localhost:8000/deleteRedirect/{id}
 * delete all to-do list : http://localhost:8000/deleteRedirect
 * generate a new token : http://localhost:8000/auth/token
-* get token status (Only if tokens with TTL or RefreshToken)
