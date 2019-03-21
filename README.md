@@ -12,3 +12,13 @@ Steps：
 5. `docker-compose exec laravel php artisan migrate`
 6. `docker-compose exec laravel php artisan db:seed --class=UsersTableSeeder`
 7. Open browser to show on `http://localhost:8000`
+
+APIs:
+* get all to-do lists : http://localhost:8000/todolist
+* get one to-do list : http://localhost:8000/todolist/{id}
+* create one to-do list : http://localhost:8000/addToDoList
+* update one to-do list : http://localhost:8000/updateRedirect/{id}
+* delete one to-do list : http://localhost:8000/deleteRedirect/{id}
+* delete all to-do list : http://localhost:8000/deleteRedirect
+* generate a new token : http://localhost:8000/auth/token
+* get token status (Only if tokens with TTL or RefreshToken)
